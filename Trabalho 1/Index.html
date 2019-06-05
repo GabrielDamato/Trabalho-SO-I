@@ -17,8 +17,10 @@
                 <h2>Demonstração:</h2>
                 <div id = "demonstracao">
                     <table id = "fluxograma">
-
                     </table>
+                </div>
+                <div class = "dados-processos">
+                    <h2>Detalhamento dos processos</h2>
                 </div>
             </section>            
         </main>
@@ -26,15 +28,15 @@
                 <h2 id="titulo-form">Adicionar processos</h2>
                 <form>
                     <div class="grupo">
-                        <label for="nome">Nome:</label>
+                        <label for="nome">Nome*:</label>
                         <input id="nome" name="nome" type="text" placeholder="digite o nome do processo" class="campo">
                     </div>
                     <div class="grupo">
-                        <label for="chegada">Tempo de chegada:</label>
+                        <label for="chegada">Tempo de chegada*:</label>
                         <input id="chegada" name="chegada" type="number" min="0" step="1" placeholder="0" class="campo">
                     </div>
                     <div class="grupo">
-                        <label for="execucao">Tempo de execução:</label>
+                        <label for="execucao">Tempo de execução*:</label>
                         <input id="execucao" name="execucao" type="number" min="1" step="1" placeholder="0" class="campo">
                     </div>
                     <div class="grupo">
@@ -45,8 +47,10 @@
                         <label for="duracao-entrada-saida">Duração de entrada/saída:</label>
                         <input id="duracao-entrada-saida" name="duracao-entrada-saida" type="number" min="0" step="1" placeholder="0" class="campo">
                     </div>
+                    <p>*campo obrigatório.</p>
                     <button id="adicionar-processo" class="botao bto-adicionar">Adicionar</button>
-                    <button id="executar" class="botao bto-executar">executar</button>
+                    <button id="executar" class="botao bto-executar">Executar</button>
+                    <button id="limpar" class="botao bto-limpar">Limpar</button>
                 </form>
             </section>
             <script src="js/Escalonamento.js"></script>

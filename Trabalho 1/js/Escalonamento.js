@@ -62,8 +62,12 @@ class Processo{
         this.pronto = status;
     }
 
-    getTurnAround(){
-        return this.termino - this.chegada;
+    getTurnaround(){
+        return this.termino - this.tempoChegada;
+    }
+
+    getAtrasoRelativo(){
+        return (this.termino - this.tempoChegada)/this.tempoExecucao;
     }
 
     setId(id){
@@ -93,13 +97,17 @@ botaoAdicionar.addEventListener("click", function(event){
     var intervaloEs = document.querySelector("#intervalo-entrada-saida");
     var duracaoEs = document.querySelector("#duracao-entrada-saida");
 
+    var atributos = [nome.value, chegada.value, execucao.value, intervaloEs.value, duracaoEs.value];
+
     if (filtraDadosEntrada(nome, chegada, execucao,) != false){
 
-        if (duracaoEs.value.length == "0"){
+        if (duracaoEs.value.length == 0 || duracaoEs.value == "0" || intervaloEs.value.length == 0 || intervaloEs.value == "0"){
             intervaloEs.value = execucao.value;
         }
 
-        listaProcessos.push(new Processo(nome.value, parseInt(chegada.value), parseInt(execucao.value), parseInt(intervaloEs.value), parseInt(duracaoEs.value)));
+        listaProcessos.push(new Processo(atributos[0], parseInt(atributos[1]), parseInt(atributos[2]), parseInt(atributos[3]), parseInt(atributos[4])));
+
+        criaTabelaDados(atributos);
 
         var tabela = document.querySelector("#fluxograma");
         var linha = document.createElement("tr");
@@ -111,18 +119,26 @@ botaoAdicionar.addEventListener("click", function(event){
         coluna.appendChild(textTd);
         linha.appendChild(coluna);
         event.preventDefault();
-        event.stopPropagation();
     }
-})
+});
 
 var botaoExecutar = document.querySelector("#executar");
 botaoExecutar.addEventListener("click", function(event){
+    event.preventDefault();
+
+    if (listaProcessos.length == 0){
+        alert("Nenhum processo foi adicionado!");
+    }
     setIds(listaProcessos);
     ordenaLista(listaProcessos);
     executaLista(listaProcessos, 0, 0, listaProcessos.length);
+    atualizaDadosProcessos(listaProcessos);
+    insereTempoTabela();
     event.preventDefault();
-    event.stopPropagation();
 });
+
+var botaoLimpar = document.querySelector("#limpar");
+botaoLimpar.addEventListener("click", function(){});
 
 function filtraDadosEntrada(nome, chegada, execucao){
     if (nome.value.length == 0 || chegada.value.length == 0 || execucao.value.length == 0){
@@ -131,8 +147,59 @@ function filtraDadosEntrada(nome, chegada, execucao){
     }
 }
 
+function insereTempoTabela(){
+    var tabela = document.querySelector("#fluxograma");
+    var tr = tabela.querySelector("tr");
+    var header = tabela.createTHead();
+    var linha = header.insertRow(0);
+    for (var i = 0; i < tr.cells.length; i++){
+        var coluna = linha.insertCell(i);
+        var text = document.createTextNode(i);
+        coluna.classList.add("tempo");
+        coluna.appendChild(text);
+    }
+}
 
-function adicionaProcesso(listaProcessos){  //será editado posteriormente para pegar os dados do formulário
+function criaTabelaDados(atributos){
+    var dados = document.querySelector(".dados-processos");
+    var tabela = document.createElement("table");
+    var nomeAtributos = ["Nome", "Tempo de chegada", "Tempo de execução", "Intervalo de E/S", "Duração de E/S"];
+    tabela.classList.add("dados");
+    for (var i = 0; i < 5; i++){
+        var linha = tabela.insertRow(i);
+        for (var j = 0; j < 2; j++){
+            var coluna = linha.insertCell(j);
+            if (j == 0){
+                var text = document.createTextNode(nomeAtributos[i]);
+                coluna.appendChild(text);
+            }else{
+                var text = document.createTextNode(atributos[i]);
+                coluna.appendChild(text);
+            }
+        }     
+    }
+    dados.append(tabela);
+}
+
+function atualizaDadosProcessos(listaProcessos){
+    var tabelas = document.querySelectorAll(".dados");
+    for (var i = 0; i < listaProcessos.length; i++){
+        var valoresNovos = [listaProcessos[i].getComeco(), listaProcessos[i].getTermino(), listaProcessos[i].getTurnaround(), listaProcessos[i].getAtrasoRelativo()];
+        var atributos = ["Começo", "Termino", "Turnaround", "Atraso relativo"];
+        var id = listaProcessos[i].getId();
+        for (var j = 0; j < 4; j++){
+            var linha = tabelas[id].insertRow(tabelas[id].rows.length);
+            var c1 = linha.insertCell(0);
+            var t1 = document.createTextNode(atributos[j]);
+            c1.appendChild(t1);
+            var c2 = linha.insertCell(1);
+            var t2 = document.createTextNode(valoresNovos[j]);
+            c2.appendChild(t2);
+        }
+    }
+}
+
+function adicionaProcesso(listaProcessos){
     var tabela = document.querySelector("#fluxograma")
     for (var i = 0; i < listaProcessos.length; i++){
         var linha = document.createElement("tr");
@@ -252,7 +319,6 @@ function executaLista(listaProcessos, tempo, i, n){
                 desenhaFluxograma(listaProcessos[i], tempo, cont, "executado");
                 tempo += cont;
                 ordenaLista(listaProcessos);
-                console.log(tempo);
                 return false;
             }
         }else{  //se o processo não chegou ao fim

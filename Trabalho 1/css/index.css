@@ -11,3 +11,16 @@
 .es{
     background-color: green;
 }
+
+.dados{
+    float: left;
+}
+
+.container{
+    clear: both;
+}
+
+.tempo{
+    text-align: right;
+    font-size: 10pt;
+}
