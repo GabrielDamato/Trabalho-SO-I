@@ -79,18 +79,11 @@ class Processo{
     }
 }
 
-//Use para testar
-
-/* var listaProcessos = [new Processo("p1", 0, 6, 3, 2)];
-listaProcessos.push(new Processo("p2", 0, 7, 1, 3));
-listaProcessos.push(new Processo("p3", 13, 7, 4, 3));
-console.log(listaProcessos);
-adicionaProcesso(listaProcessos); */
-
 var listaProcessos = [];
 
 var botaoAdicionar = document.querySelector("#adicionar-processo")
 botaoAdicionar.addEventListener("click", function(event){
+    event.preventDefault();
     var nome = document.querySelector("#nome");
     var chegada = document.querySelector("#chegada");
     var execucao = document.querySelector("#execucao");
@@ -121,6 +114,28 @@ botaoAdicionar.addEventListener("click", function(event){
         event.preventDefault();
     }
 });
+
+//TESTE URIAS
+//document.getElementById("teste").onclick = function() {adicionaProcessoUrias()};
+
+function exibenaTela(nome, chegada, execucao,intervaloEs, duracaoEs){
+	var div_pricipal = document.getElementById("row");
+	var div = document.createElement("div"); //Cria a Div
+	var span = document.createElement("span"); //Cria o Span
+	div_pricipal.appendChild(div); // Adiciona a div criada a Div Principal
+	div.classList.add("proc_estilo","col-md-2"); // Adicona a classe a Div
+	div.appendChild(span);
+	span.innerHTML = "Nome: "      + nome.value + "<br/>" +
+					 "Chegada: "   + chegada.value + "<br/>" +
+		             "Exec: "      + execucao.value + "<br/>" +
+		 			 "Inico E/S: " + intervaloEs.value + "<br/>" +
+		             "E/S: "       + duracaoEs.value + "<br/>";
+	
+	
+	//console.log(Processo);
+}
+
+//FIM TESTE URIAS
 
 var botaoExecutar = document.querySelector("#executar");
 botaoExecutar.addEventListener("click", function(event){
@@ -276,9 +291,9 @@ function filtraDadosEntrada(nome, chegada, execucao){
 
 function insereTempoTabela(){
     var tabela = document.querySelector("#fluxograma");
-    var tr = tabela.querySelector("tr");
     var header = tabela.createTHead();
     var linha = header.insertRow(0);
+    var tr = tabela.querySelector("tr");
     for (var i = 0; i < tr.cells.length; i++){
         var coluna = linha.insertCell(i);
         var text = document.createTextNode(i);
@@ -288,30 +303,47 @@ function insereTempoTabela(){
 }   //insere o índice de tempo acima do fluxograma
 
 function criaTabelaDados(atributos){
-    var dados = document.querySelector(".dados-processos");
+    var div_pricipal = document.querySelector("#row");
+    var div = document.createElement("div"); //Cria a Div
     var tabela = document.createElement("table");
     var nomeAtributos = ["Nome", "Tempo de chegada", "Tempo de execução", "Intervalo de E/S", "Duração de E/S"];
+    criaCabecalhoDados(tabela, nomeAtributos[0], atributos[0])
+    div_pricipal.appendChild(div); // Adiciona a div criada a Div Principal
+	div.classList.add("proc_estilo","col-md-2"); // Adicona a classe a Div
+    div.appendChild(tabela);
     tabela.classList.add("dados");
-    for (var i = 0; i < 5; i++){
-        var linha = tabela.insertRow(i);
+    var body = tabela.createTBody();
+    for (var i = 0; i < 4; i++){
+        var linha = body.insertRow(i);
+        body.appendChild(linha);
         for (var j = 0; j < 2; j++){
             var coluna = linha.insertCell(j);
             if (j == 0){
-                var text = document.createTextNode(nomeAtributos[i]);
+                var text = document.createTextNode(nomeAtributos[i+1]);
                 coluna.appendChild(text);
             }else{
-                var text = document.createTextNode(atributos[i]);
+                var text = document.createTextNode(atributos[i+1]);
                 coluna.appendChild(text);
             }
         }     
     }
-    dados.append(tabela);
 }   //cria tabela inicial com o detalhamento dos processos adicionados
+
+function criaCabecalhoDados(tabela, nomeAtributo, atributo){
+    var header = tabela.createTHead();
+    var linha = header.insertRow(0);
+    var c1 = linha.insertCell(0);
+    var c2 = linha.insertCell(1);
+    var t1 = document.createTextNode(nomeAtributo);
+    var t2 = document.createTextNode(atributo);
+    c1.appendChild(t1);
+    c2.appendChild(t2);
+}
 
 function atualizaDadosProcessos(listaProcessos){
     var tabelas = document.querySelectorAll(".dados");
     for (var i = 0; i < listaProcessos.length; i++){
-        var valoresNovos = [listaProcessos[i].getComeco(), listaProcessos[i].getTermino(), listaProcessos[i].getTurnaround(), listaProcessos[i].getAtrasoRelativo()];
+        var valoresNovos = [listaProcessos[i].getComeco(), listaProcessos[i].getTermino(), listaProcessos[i].getTurnaround(), listaProcessos[i].getAtrasoRelativo().toFixed(2)];
         var atributos = ["Começo", "Termino", "Turnaround", "Atraso relativo"];
         var id = listaProcessos[i].getId();
         for (var j = 0; j < 4; j++){

@@ -24,3 +24,19 @@
     text-align: right;
     font-size: 10pt;
 }
+
+.dados td{
+    text-align: left;
+    border: 1px solid gray;
+    padding: 5px;
+    white-space: nowrap
+}
+
+.dados thead td{
+    font-weight: bold;
+    background-color: rgb(200, 200, 200); 
+}
+
+#row{
+    margin-bottom: 30px;
+}
