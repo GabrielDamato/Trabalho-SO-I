@@ -44,3 +44,19 @@
 .proc_estilo{
     margin-right: 30px;
 }
+
+.observacao{
+    color: red;
+    font-size: 10pt;
+    margin-bottom: 20px;
+}
+
+.required:after {
+    content:" *"; 
+    color: red;
+}
+
+.campo{
+    width: 70px;
+    height: 31px;
+}

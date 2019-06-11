@@ -90,13 +90,14 @@ botaoAdicionar.addEventListener("click", function(event){
     var intervaloEs = document.querySelector("#intervalo-entrada-saida");
     var duracaoEs = document.querySelector("#duracao-entrada-saida");
 
-    var atributos = [nome.value, chegada.value, execucao.value, intervaloEs.value, duracaoEs.value];
-
     if (filtraDadosEntrada(nome, chegada, execucao,) != false){
 
-        if (duracaoEs.value.length == 0 || duracaoEs.value == "0" || intervaloEs.value.length == 0 || intervaloEs.value == "0"){
+        if (duracaoEs.value.length == 0 || duracaoEs.value == "0" || intervaloEs.value.length == 0 || intervaloEs.value == "0" || intervaloEs.value >= execucao.value){
             intervaloEs.value = execucao.value;
+            duracaoEs.value = 0;
         }
+
+        var atributos = [nome.value, chegada.value, execucao.value, intervaloEs.value, duracaoEs.value];
 
         listaProcessos.push(new Processo(atributos[0], parseInt(atributos[1]), parseInt(atributos[2]), parseInt(atributos[3]), parseInt(atributos[4])));
 
@@ -112,6 +113,7 @@ botaoAdicionar.addEventListener("click", function(event){
         coluna.appendChild(textTd);
         linha.appendChild(coluna);
         event.preventDefault();
+        window.scrollTo(0, 500);
     }
 });
 
@@ -150,6 +152,9 @@ botaoExecutar.addEventListener("click", function(event){
     atualizaDadosProcessos(listaProcessos);
     insereTempoTabela();
     event.preventDefault();
+    botaoExecutar.setAttribute("disabled","disabled");
+    botaoAdicionar.setAttribute("disabled","disabled");
+    window.scrollTo(0, 500);
 });
 
 var botaoLimpar = document.querySelector("#limpar");

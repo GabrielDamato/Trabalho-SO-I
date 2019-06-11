@@ -20,25 +20,26 @@
 				<hr class="my-4">
                 <form>
                     <div class="form-group row">
-                        <label class="col-md-3" for="nome">Nome:</label>
+                        <label class="col-md-3 required" for="nome">Nome:</label>
                         <input id="nome" name="nome" type="text" placeholder="digite o nome do processo" class="form-control form-control-sm col-sm-3">
                     </div>
                     <div class="form-group row">
-                        <label class="col-md-3" for="chegada">Tempo de chegada:</label>
-                        <input id="chegada" name="chegada" type="number" min="0" step="1" placeholder="0" class="form-control form-contro-sm col-sm-3">
+                        <label class="col-md-3 required" for="chegada">Tempo de chegada:</label>
+                        <input id="chegada" name="chegada" type="number" min="0" step="1" class="campo form-control form-control-sm">
                     </div>
                     <div class="form-group row">
-                        <label class="col-md-3" for="execucao">Tempo de execução:</label>
-                        <input id="execucao" name="execucao" type="number" min="1" step="1" placeholder="0" class="campo">
+                        <label class="col-md-3 required" for="execucao">Tempo de execução:</label>
+                        <input id="execucao" name="execucao" type="number" min="1" step="1" class="campo form-control form-control-sm">
                     </div>
                     <div class="form-group row">
-                        <label class="col-md-3" for="intervalo-entrada-saida">Período em que ocorre entrada/saída:</label>
-                        <input id="intervalo-entrada-saida" name="intervalo-entrada-saida" type="number" min="0" step="1" placeholder="0" class="campo">
+                        <label class="col-md-3" for="intervalo-entrada-saida">Inicio de entrada/saída:</label>
+                        <input id="intervalo-entrada-saida" name="intervalo-entrada-saida" type="number" min="0" step="1" class="campo form-control form-control-sm">
                     </div>
                     <div class="form-group row">
                         <label class="col-md-3" for="duracao-entrada-saida">Duração de entrada/saída:</label>
-                        <input id="duracao-entrada-saida" name="duracao-entrada-saida" type="number" min="0" step="1" placeholder="0" class="campo">
+                        <input id="duracao-entrada-saida" name="duracao-entrada-saida" type="number" min="0" step="1" class="campo form-control form-control-sm">
                     </div>
+                    <p class="observacao">*Campo Obrigatório</p>
                     <button id="adicionar-processo" class="btn btn-primary">Adicionar</button>
                     <button id="executar" class="btn btn-primary">Executar</button>
                     <button id="limpar" class="btn btn-primary">Limpar</button>
