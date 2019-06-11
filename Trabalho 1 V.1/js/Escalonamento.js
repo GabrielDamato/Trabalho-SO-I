@@ -252,7 +252,7 @@ function executaEs(listaProcessos, tempo, i, n){
 
     var cont = (listaProcessos[i].getDuracaoEs() - (tempo - listaProcessos[i].getTermino()));
     listaProcessos[i].setPronto(true);
-    desenhaFluxograma(listaProcessos[i], tempo, cont, "es");
+    desenhaFluxograma(listaProcessos[i], tempo, cont, "coluna");
     executaLista(listaProcessos, tempo + cont, i, n);
 }   //faz o retorno de um processo em entrada e saída e chama sua proxima execução 
 
@@ -278,7 +278,7 @@ function desenhaFluxograma(processo, tempo, cont, status){
 function executaInicio(listaProcessos, tempo, i, n){
     cont = listaProcessos[i].getTempoChegada() - tempo;
     listaProcessos[i].setPronto(true);
-    desenhaFluxograma(listaProcessos[i], tempo, cont, "es");
+    desenhaFluxograma(listaProcessos[i], tempo, cont, "coluna");
     executaLista(listaProcessos, tempo + cont, i, n);
 }   //avança até a chegada do processo e chama sua proxima execução
 
@@ -291,9 +291,9 @@ function filtraDadosEntrada(nome, chegada, execucao){
 
 function insereTempoTabela(){
     var tabela = document.querySelector("#fluxograma");
+    var tr = tabela.querySelector("tr");
     var header = tabela.createTHead();
     var linha = header.insertRow(0);
-    var tr = tabela.querySelector("tr");
     for (var i = 0; i < tr.cells.length; i++){
         var coluna = linha.insertCell(i);
         var text = document.createTextNode(i);
@@ -380,10 +380,10 @@ function setIds(listaProcessos){
 }   //atribui id's aos processos para identificação no fluxograma
 
 function comparar(a,b){
-    if (a.tempoExecucao < b.tempoExecucao){
+    if (a.getTempoExecucao() < b.getTempoExecucao()){
         return -1;
     }
-    if (a.tempoExecucao < b.tempoExecucao){
+    if (a.getTempoExecucao() > b.getTempoExecucao()){
         return 1;
     }
     return 0;

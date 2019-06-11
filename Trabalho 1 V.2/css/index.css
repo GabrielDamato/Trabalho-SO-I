@@ -1,0 +1,46 @@
+.coluna{
+    width: 40px;
+    background-color: gray; 
+    border: 1px solid black;
+}
+
+.executado{
+    background-color: red;
+}
+
+.es{
+    background-color: green;
+}
+
+.dados{
+    float: left;
+}
+
+.container{
+    clear: both;
+}
+
+.tempo{
+    text-align: right;
+    font-size: 10pt;
+}
+
+.dados td{
+    text-align: left;
+    border: 1px solid gray;
+    padding: 5px;
+    white-space: nowrap
+}
+
+.dados thead td{
+    font-weight: bold;
+    background-color: rgb(200, 200, 200); 
+}
+
+#row{
+    margin-bottom: 30px;
+}
+
+.proc_estilo{
+    margin-right: 30px;
+}
