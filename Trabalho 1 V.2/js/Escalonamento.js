@@ -1,9 +1,9 @@
 class Processo{
-    constructor(nome, tempoChegada, tempoExecucao, intervaloEs, duracaoEs){
+    constructor(nome, tempoChegada, tempoExecucao, inicioES, duracaoEs){
         this.nome = nome;
         this.tempoChegada = tempoChegada;
         this.tempoExecucao = tempoExecucao;
-        this.intervaloEs = intervaloEs;
+        this.inicioES = inicioES;
         this.duracaoEs = duracaoEs;
         this.posicaoAtual = 0;
         this.pronto = false;
@@ -22,8 +22,8 @@ class Processo{
         return this.tempoExecucao;
     }
 
-    getIntervaloEs(){
-        return this.intervaloEs;
+    getinicioES(){
+        return this.inicioES;
     }
 
     getDuracaoEs(){
@@ -83,21 +83,21 @@ var listaProcessos = [];
 
 var botaoAdicionar = document.querySelector("#adicionar-processo")
 botaoAdicionar.addEventListener("click", function(event){
-    event.preventDefault();
+    
     var nome = document.querySelector("#nome");
     var chegada = document.querySelector("#chegada");
     var execucao = document.querySelector("#execucao");
-    var intervaloEs = document.querySelector("#intervalo-entrada-saida");
+    var inicioES = document.querySelector("#intervalo-entrada-saida");
     var duracaoEs = document.querySelector("#duracao-entrada-saida");
 
     if (filtraDadosEntrada(nome, chegada, execucao,) != false){
 
-        if (duracaoEs.value.length == 0 || duracaoEs.value == "0" || intervaloEs.value.length == 0 || intervaloEs.value == "0" || intervaloEs.value >= execucao.value){
-            intervaloEs.value = execucao.value;
+        if (duracaoEs.value.length == 0 || duracaoEs.value == "0" || inicioES.value.length == 0 || inicioES.value == "0" || inicioES.value >= execucao.value){
+            inicioES.value = execucao.value;
             duracaoEs.value = 0;
         }
 
-        var atributos = [nome.value, chegada.value, execucao.value, intervaloEs.value, duracaoEs.value];
+        var atributos = [nome.value, chegada.value, execucao.value, inicioES.value, duracaoEs.value];
 
         listaProcessos.push(new Processo(atributos[0], parseInt(atributos[1]), parseInt(atributos[2]), parseInt(atributos[3]), parseInt(atributos[4])));
 
@@ -117,31 +117,9 @@ botaoAdicionar.addEventListener("click", function(event){
     }
 });
 
-//TESTE URIAS
-//document.getElementById("teste").onclick = function() {adicionaProcessoUrias()};
-
-function exibenaTela(nome, chegada, execucao,intervaloEs, duracaoEs){
-	var div_pricipal = document.getElementById("row");
-	var div = document.createElement("div"); //Cria a Div
-	var span = document.createElement("span"); //Cria o Span
-	div_pricipal.appendChild(div); // Adiciona a div criada a Div Principal
-	div.classList.add("proc_estilo","col-md-2"); // Adicona a classe a Div
-	div.appendChild(span);
-	span.innerHTML = "Nome: "      + nome.value + "<br/>" +
-					 "Chegada: "   + chegada.value + "<br/>" +
-		             "Exec: "      + execucao.value + "<br/>" +
-		 			 "Inico E/S: " + intervaloEs.value + "<br/>" +
-		             "E/S: "       + duracaoEs.value + "<br/>";
-	
-	
-	//console.log(Processo);
-}
-
-//FIM TESTE URIAS
-
 var botaoExecutar = document.querySelector("#executar");
 botaoExecutar.addEventListener("click", function(event){
-    event.preventDefault();
+    
 
     if (listaProcessos.length == 0){
         alert("Nenhum processo foi adicionado!");
@@ -167,25 +145,25 @@ function executaLista(listaProcessos, tempo, i, n){
         //executa até a proxima E/S
         verificaComeco(listaProcessos[i], tempo);
         if (listaProcessos[i].getPosicaoAtual() == 0){    //se o processo ainda não fez E/S
-            var cont = listaProcessos[i].getIntervaloEs();
-            listaProcessos[i].setPosicaoAtual(listaProcessos[i].getPosicaoAtual() + cont);
-            listaProcessos[i].setTermino(tempo + cont);
+            var avanca = listaProcessos[i].getinicioES();
+            listaProcessos[i].setPosicaoAtual(listaProcessos[i].getPosicaoAtual() + avanca);
+            listaProcessos[i].setTermino(tempo + avanca);
             listaProcessos[i].setPronto(false); 
-            desenhaFluxograma(listaProcessos[i], tempo, cont, "executado");
-            executaLista(listaProcessos, tempo + cont, 0, n);
+            desenhaFluxograma(listaProcessos[i], tempo, avanca, "executado");
+            executaLista(listaProcessos, tempo + avanca, 0, n);
         }else{  //se o processo já fez E/S
-            var cont = listaProcessos[i].getTempoExecucao() - listaProcessos[i].getPosicaoAtual();
+            var avanca = listaProcessos[i].getTempoExecucao() - listaProcessos[i].getPosicaoAtual();
             listaProcessos[i].setPosicaoAtual(listaProcessos[i].getTempoExecucao());
-            listaProcessos[i].setTermino(tempo + cont);
-            terminaProcesso(listaProcessos[i], tempo, cont);
+            listaProcessos[i].setTermino(tempo + avanca);
+            terminaProcesso(listaProcessos[i], tempo, avanca);
             if (n > 1){ //se não for o ultimo processo
-                desenhaFluxograma(listaProcessos[i], tempo, cont, "executado");
+                desenhaFluxograma(listaProcessos[i], tempo, avanca, "executado");
                 ajustaLista(listaProcessos, i);
                 n--;
-                executaLista(listaProcessos, tempo + cont, 0, n);
+                executaLista(listaProcessos, tempo + avanca, 0, n);
             } else{ //se for o ultimo processo
-                desenhaFluxograma(listaProcessos[i], tempo, cont, "executado");
-                tempo += cont;
+                desenhaFluxograma(listaProcessos[i], tempo, avanca, "executado");
+                tempo += avanca;
                 ordenaLista(listaProcessos);
                 return false;
             } 
@@ -194,7 +172,7 @@ function executaLista(listaProcessos, tempo, i, n){
         if ((i + 1) < n){ //se o processo não for o ultimo da lista
             //passa para o proximo
             executaLista(listaProcessos, tempo, i + 1, n);
-        }else if (n == 1){    //se a lista contém apenas esse processo
+        }else if (n == 1){    //se a lista avancaém apenas esse processo
             if(listaProcessos[i].getComeco() != undefined){ //se o processo já foi iniciado
                 executaEs(listaProcessos, tempo, i, n);
             }else{  //se o processo ainda não foi iniciado
@@ -215,7 +193,7 @@ function verificaComeco(processo, tempo){
     if (processo.getPosicaoAtual() == 0){
         processo.setComeco(tempo);
     }
-}   //atribui o tempo de inicio do processo 
+}   //atribui o tempo de inicio do processo
 
 function verificaPronto(processo, tempo){
     if (tempo >= processo.getTempoChegada() && processo.getPosicaoAtual() == 0){    //se o processo já chegou e ainda não iniciou
@@ -245,9 +223,9 @@ function voltaPrimeiro(listaProcessos, tempo, n){
     return indice; 
 }   //verifica qual processo volta primeiro para a fila de prontos
 
-function terminaProcesso(processo, tempo, cont){
+function terminaProcesso(processo, tempo, avanca){
     processo.setPosicaoAtual(processo.getTempoExecucao());
-    processo.setTermino(tempo + cont);
+    processo.setTermino(tempo + avanca);
 }   //atribui o tempo de termino do processo
 
 function ajustaLista(listaProcessos, i){
@@ -257,19 +235,19 @@ function ajustaLista(listaProcessos, i){
 
 function executaEs(listaProcessos, tempo, i, n){
 
-    var cont = (listaProcessos[i].getDuracaoEs() - (tempo - listaProcessos[i].getTermino()));
+    var avanca = (listaProcessos[i].getDuracaoEs() - (tempo - listaProcessos[i].getTermino()));
     listaProcessos[i].setPronto(true);
-    desenhaFluxograma(listaProcessos[i], tempo, cont, "coluna");
-    executaLista(listaProcessos, tempo + cont, i, n);
+    desenhaFluxograma(listaProcessos[i], tempo, avanca, "coluna");
+    executaLista(listaProcessos, tempo + avanca, i, n);
 }   //faz o retorno de um processo em entrada e saída e chama sua proxima execução 
 
-function desenhaFluxograma(processo, tempo, cont, status){
+function desenhaFluxograma(processo, tempo, avanca, status){
     var tabela = document.querySelector("#fluxograma");
     var numLinhas = tabela.rows.length;
     var linha;
     var coluna;
     for (var i = 0; i < numLinhas; i++){
-        for (var j = (tempo + 1); j < (tempo + 1 + cont); j++){
+        for (var j = (tempo + 1); j < (tempo + 1 + avanca); j++){
             linha = tabela.rows[i];
             coluna = linha.insertCell(j);
             if (linha.id == processo.getId()){
@@ -283,10 +261,10 @@ function desenhaFluxograma(processo, tempo, cont, status){
 }   //cria e formata a tabela do fluxograma de demonstração conforme cada processo é executado
 
 function executaInicio(listaProcessos, tempo, i, n){
-    cont = listaProcessos[i].getTempoChegada() - tempo;
+    avanca = listaProcessos[i].getTempoChegada() - tempo;
     listaProcessos[i].setPronto(true);
-    desenhaFluxograma(listaProcessos[i], tempo, cont, "coluna");
-    executaLista(listaProcessos, tempo + cont, i, n);
+    desenhaFluxograma(listaProcessos[i], tempo, avanca, "coluna");
+    executaLista(listaProcessos, tempo + avanca, i, n);
 }   //avança até a chegada do processo e chama sua proxima execução
 
 function filtraDadosEntrada(nome, chegada, execucao){
@@ -313,7 +291,7 @@ function criaTabelaDados(atributos){
     var div_pricipal = document.querySelector("#row");
     var div = document.createElement("div"); //Cria a Div
     var tabela = document.createElement("table");
-    var nomeAtributos = ["Nome", "Tempo de chegada", "Tempo de execução", "Intervalo de E/S", "Duração de E/S"];
+    var nomeAtributos = ["Nome", "Tempo de chegada", "Tempo de execução", "Inicio de E/S", "Duração de E/S"];
     criaCabecalhoDados(tabela, nomeAtributos[0], atributos[0])
     div_pricipal.appendChild(div); // Adiciona a div criada a Div Principal
 	div.classList.add("proc_estilo","col-md-2"); // Adicona a classe a Div
@@ -345,7 +323,7 @@ function criaCabecalhoDados(tabela, nomeAtributo, atributo){
     var t2 = document.createTextNode(atributo);
     c1.appendChild(t1);
     c2.appendChild(t2);
-}
+}   //cria cabeçalho da tabela de dados
 
 function atualizaDadosProcessos(listaProcessos){
     var tabelas = document.querySelectorAll(".dados");
@@ -364,21 +342,6 @@ function atualizaDadosProcessos(listaProcessos){
         }
     }
 }   //atualiza a tabela de detalhamento dos processos com seus valores após a execução
-
-function adicionaProcesso(listaProcessos){
-    var tabela = document.querySelector("#fluxograma")
-    for (var i = 0; i < listaProcessos.length; i++){
-        var linha = document.createElement("tr");
-        var coluna = document.createElement("td");
-        var textTd = document.createTextNode(listaProcessos[i].getName());
-        linha.id = i;
-        linha.classList.add("processo");
-        tabela.appendChild(linha);
-        coluna.appendChild(textTd);
-        linha.appendChild(coluna);
-    }
-    setIds(listaProcessos);
-}   //adicionar processo a lista de execução
 
 function setIds(listaProcessos){
     for (var i = 0; i < listaProcessos.length; i++){
